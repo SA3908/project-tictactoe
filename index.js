@@ -1,3 +1,5 @@
+const GameBoard = document.querySelector("gameboard");
+
 function gameBoard() {
     const rows = 3;
     const col = 3;
@@ -13,6 +15,7 @@ function gameBoard() {
     const playerTwo = createPlayer("Player 2");
 
 
+
 }
 
 function cell() { //either a 0 for empty, 1 for player one and 2 for player 2
@@ -24,3 +27,8 @@ function createPlayer(name) {
     const userName = name;
     return {userName};
 }
+
+const startButton = document.querySelector("#start-button");
+startButton.addEventListener("click", () => {
+    
+})

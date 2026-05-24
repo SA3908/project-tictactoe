@@ -39,7 +39,7 @@ function Cell() { //0 for empty, X for player one, O for player 2
         value = marker;
     }
 
-    const getValue = () => {value};
+    const getValue = () => { return value};
     return {setValue, getValue};
 }
 

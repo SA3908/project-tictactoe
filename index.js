@@ -17,6 +17,7 @@ function gameBoard() {
 const Game = (() => { //IIFE function
     let players = []
     let currentPlayerIndex = 0;
+    let gameOver;
 
     const start = () => {
         players = [
@@ -24,7 +25,9 @@ const Game = (() => { //IIFE function
             createPlayer(document.querySelector("#player2").value, "O")
         ]
         gameOver = false;
+        
     }
+    return {start};
 })();
 
 function cell() { //either a 0 for empty, 1 for player one and 2 for player 2

@@ -8,10 +8,13 @@ function gameBoard() {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < col; j++) {
-            board[i].push(cell());
+            board[i].push(Cell());
         }
     }
 
+    const getBoard = () => board;
+
+    return {getBoard};
 }
 
 const Game = (() => { //IIFE function
@@ -30,9 +33,14 @@ const Game = (() => { //IIFE function
     return {start};
 })();
 
-function cell() { //either a 0 for empty, 1 for player one and 2 for player 2
+function Cell() { //0 for empty, X for player one, O for player 2
     let value = 0;
-    return 0;
+    const setValue = (marker) => {
+        value = marker;
+    }
+
+    const getValue = () => {value};
+    return {setValue, getValue};
 }
 
 const createPlayer = (name, mark) => { //Player factory

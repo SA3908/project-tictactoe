@@ -41,7 +41,7 @@ screenController = () => {
                 cellButton.dataset.rowIndex = rowIndex;
                 cellButton.dataset.colIndex = colIndex;
                 cellButton.textContent = Cell.getValue();
-                
+
                 boardElem.appendChild(cellButton);
             });
         });
@@ -64,7 +64,6 @@ const Game = (() => { //IIFE function
         screenController = screenController();
         board.displayBoardConsole();
         screenController.updateScreen(board, currentPlayerIndex, players[currentPlayerIndex]);
-        //Need function to display to screen by converting board into dom elements
         //Need function to update screen when board button is clicked and playRound() function
 
         gameOver = false;

@@ -17,12 +17,37 @@ function gameBoard() {
         board[i][j].setValue(marker);
     }
 
-    const displayBoard = () => { //displays the game board to console
+    const displayBoardConsole = () => { //displays the game board to console
         const display = board.map((row) => row.map((Cell) => Cell.getValue())); //Array of Cell values
         console.log(display);
     }
 
-    return {getBoard, setBoardValue, displayBoard};
+    return {getBoard, setBoardValue, displayBoardConsole};
+}
+
+screenController = () => {
+    const boardElem = document.querySelector("#gameboard");
+    const message = document.querySelector("#message");
+
+    const updateScreen = (board, playerIndex, player) => {
+        boardElem.textContent = "";
+        message.textContent = `It is ${player.getName()}'s turn. `;
+
+        board.getBoard().forEach((row, rowIndex) => {
+            row.forEach((Cell, colIndex) => { 
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("cell");
+
+                cellButton.dataset.rowIndex = rowIndex;
+                cellButton.dataset.colIndex = colIndex;
+                cellButton.textContent = Cell.getValue();
+                
+                boardElem.appendChild(cellButton);
+            });
+        });
+    }
+
+    return {updateScreen};
 }
 
 const Game = (() => { //IIFE function
@@ -36,7 +61,12 @@ const Game = (() => { //IIFE function
             createPlayer(document.querySelector("#player2").value, "O")
         ]
         board = gameBoard();
-        board.displayBoard();
+        screenController = screenController();
+        board.displayBoardConsole();
+        screenController.updateScreen(board, currentPlayerIndex, players[currentPlayerIndex]);
+        //Need function to display to screen by converting board into dom elements
+        //Need function to update screen when board button is clicked and playRound() function
+
         gameOver = false;
 
         
@@ -55,7 +85,8 @@ function Cell() { // return cell object 0 for empty, X for player one, O for pla
 }
 
 const createPlayer = (name, mark) => { //Player factory
-    return {name, mark}
+    const getName = () => name;
+    return {name, mark, getName}
 }
 
 const startButton = document.querySelector("#start-button");

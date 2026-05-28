@@ -42,6 +42,10 @@ screenController = () => {
                 cellButton.dataset.colIndex = colIndex;
                 cellButton.textContent = Cell.getValue();
 
+                cellButton.addEventListener("click", () => {
+
+                });
+
                 boardElem.appendChild(cellButton);
             });
         });
@@ -50,6 +54,11 @@ screenController = () => {
     return {updateScreen};
 }
 
+gameController = () => {
+    board = gameBoard();
+    return {board};
+
+}
 const Game = (() => { //IIFE function
     let players = []
     let currentPlayerIndex = 0;
@@ -60,10 +69,10 @@ const Game = (() => { //IIFE function
             createPlayer(document.querySelector("#player1").value, "X"),
             createPlayer(document.querySelector("#player2").value, "O")
         ]
-        board = gameBoard();
         screenController = screenController();
+        gameController = gameController();
         board.displayBoardConsole();
-        screenController.updateScreen(board, currentPlayerIndex, players[currentPlayerIndex]);
+        screenController.updateScreen(gameController.board, currentPlayerIndex, players[currentPlayerIndex]);
         //Need function to update screen when board button is clicked and playRound() function
 
         gameOver = false;
@@ -91,4 +100,4 @@ const createPlayer = (name, mark) => { //Player factory
 const startButton = document.querySelector("#start-button");
 startButton.addEventListener("click", () => {
     Game.start();
-})
+});

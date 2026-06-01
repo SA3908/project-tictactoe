@@ -56,8 +56,9 @@ screenController = () => {
 
 gameController = () => {
     board = gameBoard();
-    return {board};
 
+
+    return {board};
 }
 const Game = (() => { //IIFE function
     let players = []
@@ -71,7 +72,7 @@ const Game = (() => { //IIFE function
         ]
         screenController = screenController();
         gameController = gameController();
-        board.displayBoardConsole();
+        gameController.board.displayBoardConsole();
         screenController.updateScreen(gameController.board, currentPlayerIndex, players[currentPlayerIndex]);
         //Need function to update screen when board button is clicked and playRound() function
 

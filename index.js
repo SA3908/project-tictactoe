@@ -29,11 +29,11 @@ screenController = () => {
     const boardElem = document.querySelector("#gameboard");
     const message = document.querySelector("#message");
 
-    const updateScreen = (board, playerIndex, player) => {
+    const updateScreen = (gameController, playerIndex, player) => {
         boardElem.textContent = "";
         message.textContent = `It is ${player.getName()}'s turn. `;
 
-        board.getBoard().forEach((row, rowIndex) => {
+        gameController.board.getBoard().forEach((row, rowIndex) => {
             row.forEach((Cell, colIndex) => { 
                 const cellButton = document.createElement("button");
                 cellButton.classList.add("cell");
@@ -73,7 +73,7 @@ const Game = (() => { //IIFE function
         screenController = screenController();
         gameController = gameController();
         gameController.board.displayBoardConsole();
-        screenController.updateScreen(gameController.board, currentPlayerIndex, players[currentPlayerIndex]);
+        screenController.updateScreen(gameController, currentPlayerIndex, players[currentPlayerIndex]);
         //Need function to update screen when board button is clicked and playRound() function
 
         gameOver = false;

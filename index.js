@@ -42,8 +42,9 @@ screenController = () => {
                 cellButton.dataset.colIndex = colIndex;
                 cellButton.textContent = Cell.getValue();
 
-                cellButton.addEventListener("click", () => {
-
+                cellButton.addEventListener("click", (e) => {
+                    gameController.boxClick(e, player);
+                    updateScreen(gameController, playerIndex, player);
                 });
 
                 boardElem.appendChild(cellButton);
@@ -57,8 +58,11 @@ screenController = () => {
 gameController = () => {
     board = gameBoard();
 
+    const boxClick = (e, player) => {
+        board.setBoardValue(e.target.dataset.rowIndex, e.target.dataset.colIndex, player.mark);
+    };
 
-    return {board};
+    return {board, boxClick};
 }
 const Game = (() => { //IIFE function
     let players = []

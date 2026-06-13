@@ -29,7 +29,9 @@ screenController = () => {
     const boardElem = document.querySelector("#gameboard");
     const message = document.querySelector("#message");
 
-    const updateScreen = (gameController, playerIndex, player) => {
+    const updateScreen = (gameController) => {
+        let player = gameController.players[gameController.currentPlayerIndex];
+        let playerIndex = gameController.currentPlayerIndex;
         boardElem.textContent = "";
         message.textContent = `It is ${player.getName()}'s turn. `;
 
@@ -42,7 +44,7 @@ screenController = () => {
                 cellButton.dataset.colIndex = colIndex;
                 cellButton.textContent = Cell.getValue();
 
-                cellButton.addEventListener("click", (e) => {
+                cellButton.addEventListener("click", (e) => { //need to change player index and check winning conditions
                     gameController.boxClick(e, player);
                     updateScreen(gameController, playerIndex, player);
                 });
@@ -56,28 +58,30 @@ screenController = () => {
 }
 
 gameController = () => {
-    board = gameBoard();
+    const board = gameBoard();
 
-    const boxClick = (e, player) => {
+    const players = [
+        createPlayer(document.querySelector("#player1").value, "X"),
+        createPlayer(document.querySelector("#player2").value, "O")
+    ];
+
+    currentPlayerIndex = 0;
+
+    const boxClick = (e, player) => { // Sets the text of the board button to the player's mark.
         board.setBoardValue(e.target.dataset.rowIndex, e.target.dataset.colIndex, player.mark);
     };
 
-    return {board, boxClick};
+
+    return {board, players, currentPlayerIndex, boxClick};
 }
 const Game = (() => { //IIFE function
-    let players = []
-    let currentPlayerIndex = 0;
     let gameOver;
 
     const start = () => {
-        players = [
-            createPlayer(document.querySelector("#player1").value, "X"),
-            createPlayer(document.querySelector("#player2").value, "O")
-        ]
         screenController = screenController();
         gameController = gameController();
         gameController.board.displayBoardConsole();
-        screenController.updateScreen(gameController, currentPlayerIndex, players[currentPlayerIndex]);
+        screenController.updateScreen(gameController);
         //Need function to update screen when board button is clicked and playRound() function
 
         gameOver = false;

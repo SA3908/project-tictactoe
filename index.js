@@ -30,8 +30,8 @@ screenController = () => {
     const message = document.querySelector("#message");
 
     const updateScreen = (gameController) => {
-        let player = gameController.players[gameController.currentPlayerIndex];
-        let playerIndex = gameController.currentPlayerIndex;
+        let player = gameController.players[gameController.getCurrentPlayerIndex()];
+        let playerIndex = gameController.getCurrentPlayerIndex();
         boardElem.textContent = "";
         message.textContent = `It is ${player.getName()}'s turn. `;
 
@@ -65,14 +65,16 @@ gameController = () => {
         createPlayer(document.querySelector("#player2").value, "O")
     ];
 
-    currentPlayerIndex = 0;
+    let currentPlayerIndex = 0;
 
     const boxClick = (e, player) => { // Sets the text of the board button to the player's mark.
         board.setBoardValue(e.target.dataset.rowIndex, e.target.dataset.colIndex, player.mark);
+        currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
     };
 
+      const getCurrentPlayerIndex = () => currentPlayerIndex;
 
-    return {board, players, currentPlayerIndex, boxClick};
+    return {board, players, getCurrentPlayerIndex, boxClick};
 }
 const Game = (() => { //IIFE function
     let gameOver;

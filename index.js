@@ -1,4 +1,17 @@
 const GameBoard = document.querySelector("gameboard");
+const winCombinations = [
+  // Horizontal Wins
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  // Vertical Wins
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  // Diagonal Wins
+  [0, 4, 8],
+  [2, 4, 6]
+];
 
 function gameBoard() {
     const rows = 3;
@@ -46,6 +59,7 @@ screenController = () => {
 
                 cellButton.addEventListener("click", (e) => { //need to change player index and check winning conditions
                     gameController.boxClick(e, player);
+                    const win = gameController.checkWin(e, player);
                     updateScreen(gameController, playerIndex, player);
                 });
 
@@ -72,9 +86,16 @@ gameController = () => {
         currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
     };
 
+    const checkWin = (e, player) => {
+        const cells = board.getBoard().flat();
+        return winCombinations.some(combination => {
+            return combination.every(index => cells[index].getValue() === player.mark); 
+        }); //This function works by checking if any of the subarrays are true and the subarray is true when every element of the subarray is the player mark
+    };
+
       const getCurrentPlayerIndex = () => currentPlayerIndex;
 
-    return {board, players, getCurrentPlayerIndex, boxClick};
+    return {board, players, getCurrentPlayerIndex, boxClick, checkWin};
 }
 const Game = (() => { //IIFE function
     let gameOver;

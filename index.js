@@ -1,4 +1,5 @@
 const GameBoard = document.querySelector("gameboard");
+const message = document.querySelector("message");
 const winCombinations = [
   // Horizontal Wins
   [0, 1, 2],
@@ -35,7 +36,17 @@ function gameBoard() {
         console.log(display);
     }
 
-    return {getBoard, setBoardValue, displayBoardConsole};
+    const isBoardFull = () => {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < col; j++) {
+                if (board[i][j].getValue() === 0)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    return {getBoard, setBoardValue, displayBoardConsole, isBoardFull};
 }
 
 screenController = () => {
@@ -57,9 +68,14 @@ screenController = () => {
                 cellButton.dataset.colIndex = colIndex;
                 cellButton.textContent = Cell.getValue();
 
-                cellButton.addEventListener("click", (e) => { //need to change player index and check winning conditions
+                cellButton.addEventListener("click", (e) => { 
                     gameController.boxClick(e, player);
                     const win = gameController.checkWin(e, player);
+                    if (win == 1) {
+                        console.log("Player: " + player.getName() + " won!!!");
+                    }
+                    else if (win == 2) 
+                        console.log("Draw.");
                     updateScreen(gameController, playerIndex, player);
                 });
 
@@ -86,11 +102,15 @@ gameController = () => {
         currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
     };
 
-    const checkWin = (e, player) => {
+    const checkWin = (e, player) => { //1 = win, 2 = draw
         const cells = board.getBoard().flat();
-        return winCombinations.some(combination => {
+        let winValue = winCombinations.some(combination => {
             return combination.every(index => cells[index].getValue() === player.mark); 
         }); //This function works by checking if any of the subarrays are true and the subarray is true when every element of the subarray is the player mark
+        if (winValue)
+            return winValue;
+        else if (!winValue && board.isBoardFull())
+            return 2;
     };
 
       const getCurrentPlayerIndex = () => currentPlayerIndex;

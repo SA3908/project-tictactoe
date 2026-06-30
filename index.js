@@ -1,5 +1,7 @@
 const GameBoard = document.querySelector("gameboard");
 const message = document.querySelector("message");
+const playerTurnMessage = document.querySelector("#player-turn");
+const scoreMessage = document.querySelector("#score-message");
 const winCombinations = [
   // Horizontal Wins
   [0, 1, 2],
@@ -51,13 +53,12 @@ function gameBoard() {
 
 screenController = () => {
     const boardElem = document.querySelector("#gameboard");
-    const message = document.querySelector("#message");
 
     const updateScreen = (gameController) => {
         let player = gameController.players[gameController.getCurrentPlayerIndex()];
         let playerIndex = gameController.getCurrentPlayerIndex();
         boardElem.textContent = "";
-        message.textContent = `It is ${player.getName()}'s turn. `;
+        updateMessageTurn(player);
 
         gameController.board.getBoard().forEach((row, rowIndex) => {
             row.forEach((Cell, colIndex) => { 
@@ -71,11 +72,7 @@ screenController = () => {
                 cellButton.addEventListener("click", (e) => { 
                     gameController.boxClick(e, player);
                     const win = gameController.checkWin(e, player);
-                    if (win == 1) {
-                        console.log("Player: " + player.getName() + " won!!!");
-                    }
-                    else if (win == 2) 
-                        console.log("Draw.");
+                    updateMessageWin(win, player);
                     updateScreen(gameController, playerIndex, player);
                 });
 
@@ -83,7 +80,21 @@ screenController = () => {
             });
         });
     }
+    const updateMessageWin = (win, player) => { //Changes message element when there's a draw/win
+        if (win == 1) { //user won
+            console.log("Player: " + player.getName() + " won!!!");
+            scoreMessage.textContent = `Player: ${player.getName()} won!`;
+        }
+        else if (win == 2) {
+            console.log("Draw.");
+            scoreMessage.textContent = `Draw.`;
+        }
+    }
 
+    const updateMessageTurn = (player) => { //Changes message element for each turn
+        playerTurnMessage.textContent = `It is ${player.getName()}'s turn.`;
+    } 
+        
     return {updateScreen};
 }
 
@@ -154,6 +165,5 @@ startButton.addEventListener("click", () => {
 });
 
 //Next:
-//Need to display win/loss to screen
 //Stop gameboard from being overwritten after a win
 //Better design

@@ -125,7 +125,6 @@ const Game = (() => { //IIFE function
         gameController = gameController();
         gameController.board.displayBoardConsole();
         screenController.updateScreen(gameController);
-        //Need function to update screen when board button is clicked and playRound() function
 
         gameOver = false;
 
@@ -153,3 +152,8 @@ const startButton = document.querySelector("#start-button");
 startButton.addEventListener("click", () => {
     Game.start();
 });
+
+//Next:
+//Need to display win/loss to screen
+//Stop gameboard from being overwritten after a win
+//Better design

@@ -53,6 +53,7 @@ function gameBoard() {
 
 screenController = () => {
     const boardElem = document.querySelector("#gameboard");
+    let overwriteButtons = true;
 
     const updateScreen = (gameController) => {
         let player = gameController.players[gameController.getCurrentPlayerIndex()];
@@ -70,8 +71,15 @@ screenController = () => {
                 cellButton.textContent = Cell.getValue();
 
                 cellButton.addEventListener("click", (e) => { 
-                    gameController.boxClick(e, player);
+                    if (overwriteButtons == true) 
+                        gameController.boxClick(e, player);
+                  
                     const win = gameController.checkWin(e, player);
+
+                    if (win != 0) { //filtering for win and draws to stop gameboard from being overwritten
+                        overwriteButtons = false;
+                        
+                    }
                     updateMessageWin(win, player);
                     updateScreen(gameController, playerIndex, player);
                 });
@@ -113,7 +121,7 @@ gameController = () => {
         currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
     };
 
-    const checkWin = (e, player) => { //1 = win, 2 = draw
+    const checkWin = (e, player) => { //1 = win, 2 = draw, 0 = continue
         const cells = board.getBoard().flat();
         let winValue = winCombinations.some(combination => {
             return combination.every(index => cells[index].getValue() === player.mark); 
@@ -122,6 +130,7 @@ gameController = () => {
             return winValue;
         else if (!winValue && board.isBoardFull())
             return 2;
+        return 0;
     };
 
       const getCurrentPlayerIndex = () => currentPlayerIndex;
@@ -129,15 +138,13 @@ gameController = () => {
     return {board, players, getCurrentPlayerIndex, boxClick, checkWin};
 }
 const Game = (() => { //IIFE function
-    let gameOver;
+    let gameOver = false;
 
     const start = () => {
         screenController = screenController();
         gameController = gameController();
         gameController.board.displayBoardConsole();
         screenController.updateScreen(gameController);
-
-        gameOver = false;
 
         
     }

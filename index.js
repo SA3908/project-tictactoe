@@ -2,6 +2,10 @@ const GameBoard = document.querySelector("gameboard");
 const message = document.querySelector("message");
 const playerTurnMessage = document.querySelector("#player-turn");
 const scoreMessage = document.querySelector("#score-message");
+
+const startButton = document.querySelector("#start-button");
+const restartButton = document.querySelector("#score-message");
+
 const winCombinations = [
   // Horizontal Wins
   [0, 1, 2],
@@ -78,7 +82,7 @@ screenController = () => {
 
                     if (win != 0) { //filtering for win and draws to stop gameboard from being overwritten
                         overwriteButtons = false;
-                        
+
                     }
                     updateMessageWin(win, player);
                     updateScreen(gameController, playerIndex, player);
@@ -166,11 +170,14 @@ const createPlayer = (name, mark) => { //Player factory
     return {name, mark, getName}
 }
 
-const startButton = document.querySelector("#start-button");
+restartButton.addEventListener("click", () => {
+    
+});
+
 startButton.addEventListener("click", () => {
     Game.start();
 });
 
 //Next:
-//Stop gameboard from being overwritten after a win
+//Restart Function after each win/draw
 //Better design

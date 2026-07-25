@@ -4,7 +4,7 @@ const playerTurnMessage = document.querySelector("#player-turn");
 const scoreMessage = document.querySelector("#score-message");
 
 const startButton = document.querySelector("#start-button");
-const restartButton = document.querySelector("#score-message");
+const restartButton = document.querySelector("#restart-game");
 
 const winCombinations = [
   // Horizontal Wins

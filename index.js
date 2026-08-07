@@ -55,13 +55,12 @@ function gameBoard() {
     return {getBoard, setBoardValue, displayBoardConsole, isBoardFull};
 }
 
-screenController = () => {
+const createScreenController = (onRoundEnd) => {
     const boardElem = document.querySelector("#gameboard");
-    let overwriteButtons = true;
+    let gameEnded = false;
 
     const updateScreen = (gameController) => {
         let player = gameController.players[gameController.getCurrentPlayerIndex()];
-        let playerIndex = gameController.getCurrentPlayerIndex();
         boardElem.textContent = "";
         updateMessageTurn(player);
 
@@ -75,17 +74,23 @@ screenController = () => {
                 cellButton.textContent = Cell.getValue();
 
                 cellButton.addEventListener("click", (e) => { 
-                    if (overwriteButtons == true) 
-                        gameController.boxClick(e, player);
+                    if (gameEnded) return;
+                    const rowIndex = Number(e.currentTarget.dataset.rowIndex);
+                    const colIndex = Number(e.currentTarget.dataset.colIndex);
+                    const moveWasMade = gameController.boxClick(rowIndex, colIndex, player.getMark());
+                    if (!moveWasMade) return;
                   
                     const win = gameController.checkWin(e, player);
 
                     if (win != 0) { //filtering for win and draws to stop gameboard from being overwritten
-                        overwriteButtons = false;
-
+                       gameEnded = true;
+                       updateMessageWin(win, player);
+                       updateScreen(gameController);
+                       setTimeout(onRoundEnd, 1500);
+                       return;
                     }
                     updateMessageWin(win, player);
-                    updateScreen(gameController, playerIndex, player);
+                    updateScreen(gameController);
                 });
 
                 boardElem.appendChild(cellButton);
@@ -110,7 +115,7 @@ screenController = () => {
     return {updateScreen};
 }
 
-gameController = () => {
+const createGameController = () => {
     const board = gameBoard();
 
     const players = [
@@ -120,9 +125,13 @@ gameController = () => {
 
     let currentPlayerIndex = 0;
 
-    const boxClick = (e, player) => { // Sets the text of the board button to the player's mark.
-        board.setBoardValue(e.target.dataset.rowIndex, e.target.dataset.colIndex, player.mark);
+    const boxClick = (rowIndex, colIndex, playerMark) => { // Sets the text of the board button to the player's mark.
+        if (board.getBoard()[rowIndex][colIndex].getValue() !== 0) {
+            return false;
+        }
+        board.setBoardValue(rowIndex, colIndex, playerMark);
         currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+        return true;
     };
 
     const checkWin = (e, player) => { //1 = win, 2 = draw, 0 = continue
@@ -142,17 +151,27 @@ gameController = () => {
     return {board, players, getCurrentPlayerIndex, boxClick, checkWin};
 }
 const Game = (() => { //IIFE function
-    let gameOver = false;
+    let currentScreenController;
+    let currentGameController;
 
+    const setupRound = () => {
+        currentGameController = createGameController();
+        scoreMessage.textContent = "";
+        currentGameController.board.displayBoardConsole();
+        currentScreenController.updateScreen(currentGameController);
+    };
+    const restart = () => {
+        if (!currentScreenController) {
+            start();
+            return;
+        }
+        setupRound();
+    };
     const start = () => {
-        screenController = screenController();
-        gameController = gameController();
-        gameController.board.displayBoardConsole();
-        screenController.updateScreen(gameController);
-
-        
+        currentScreenController = createScreenController(restart);
+        setupRound();
     }
-    return {start};
+    return {start, restart};
 })();
 
 function Cell() { // return cell object 0 for empty, X for player one, O for player 2
@@ -167,11 +186,12 @@ function Cell() { // return cell object 0 for empty, X for player one, O for pla
 
 const createPlayer = (name, mark) => { //Player factory
     const getName = () => name;
-    return {name, mark, getName}
+    const getMark  = () => mark;
+    return {name, mark, getName, getMark}
 }
 
 restartButton.addEventListener("click", () => {
-    
+    Game.restart();
 });
 
 startButton.addEventListener("click", () => {
@@ -179,5 +199,4 @@ startButton.addEventListener("click", () => {
 });
 
 //Next:
-//Restart Function after each win/draw
 //Better design

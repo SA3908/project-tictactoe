@@ -57,7 +57,7 @@ function gameBoard() {
 
 const createScreenController = (onRoundEnd) => {
     const boardElem = document.querySelector("#gameboard");
-    let gameEnded = false;
+   
 
     const updateScreen = (gameController) => {
         let player = gameController.players[gameController.getCurrentPlayerIndex()];
@@ -74,7 +74,6 @@ const createScreenController = (onRoundEnd) => {
                 cellButton.textContent = Cell.getValue();
 
                 cellButton.addEventListener("click", (e) => { 
-                    if (gameEnded) return;
                     const rowIndex = Number(e.currentTarget.dataset.rowIndex);
                     const colIndex = Number(e.currentTarget.dataset.colIndex);
                     const moveWasMade = gameController.boxClick(rowIndex, colIndex, player.getMark());
@@ -83,7 +82,6 @@ const createScreenController = (onRoundEnd) => {
                     const win = gameController.checkWin(e, player);
 
                     if (win != 0) { //filtering for win and draws to stop gameboard from being overwritten
-                       gameEnded = true;
                        updateMessageWin(win, player);
                        updateScreen(gameController);
                        setTimeout(onRoundEnd, 1500);

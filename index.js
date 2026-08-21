@@ -71,7 +71,8 @@ const createScreenController = (onRoundEnd) => {
 
                 cellButton.dataset.rowIndex = rowIndex;
                 cellButton.dataset.colIndex = colIndex;
-                cellButton.textContent = Cell.getValue();
+                if (Cell.getValue() != 0)
+                    cellButton.textContent = Cell.getValue();
 
                 cellButton.addEventListener("click", (e) => { 
                     const rowIndex = Number(e.currentTarget.dataset.rowIndex);
@@ -196,5 +197,3 @@ startButton.addEventListener("click", () => {
     Game.start();
 });
 
-//Next:
-//Better design
